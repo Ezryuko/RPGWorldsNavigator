@@ -1,0 +1,36 @@
+// use prisma-8
+
+model User {
+  id Int @id @default(autoincrement())
+  username String
+  password String
+  email String @unique
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  createdWorlds World[]
+  worldCollabs WorldCollab[]
+}
+
+model World {
+  id Int @id @default(autoincrement())
+  name String
+  image String?
+  creatorId Int
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  creator User @relation(fields: [creatorId], references: [id])
+
+  collaborators WorldCollab[]
+}
+
+model WorldCollab{
+  worldId Int
+  userId Int
+
+  world World @relation(fields: [worldId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@id([worldId, userId]) // Unique key pair
+}
